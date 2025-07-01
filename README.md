@@ -11,8 +11,7 @@ This project consists of two main components:
 
 ## Features
 
-- Easy upload of before and after SAR images via drag-and-drop or file selection![Screenshot from 2025-07-01 15-39-28](https://github.com/user-attachments/assets/96e0e4d4-2d59-402c-afab-c9ec5d2321ce)
-
+- Easy upload of before and after SAR images via drag-and-drop or file selection!
 - Detection and classification of changes as man-made or natural
 - Visualization of change detection results
 - Display of confidence scores for predictions

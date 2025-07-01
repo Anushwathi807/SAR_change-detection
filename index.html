@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAR Change Detection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="background-animation" id="backgroundAnimation"></div>
+    
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1><i class="fas fa-satellite header-icon"></i> SAR Change Detection</h1>
+                <p class="header-description">
+                    Detect and analyze man-made changes in Synthetic Aperture Radar (SAR) satellite imagery
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        <section class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-upload section-header-icon"></i> Upload Images</h2>
+            </div>
+            <div class="upload-container">
+                <div>
+                    <div id="dropzone1" class="dropzone" data-tooltip="Drop your first SAR image here">
+                        <div class="dropzone-content">
+                            <i class="fas fa-cloud-upload-alt dropzone-icon"></i>
+                            <h3>First SAR Image</h3>
+                            <p>Drag & drop your image here or click to browse</p>
+                            <p class="file-format-hint">Supports PNG, JPG, TIFF (max 10MB)</p>
+                            <input type="file" id="file1" accept="image/*" hidden>
+                        </div>
+                        <div class="image-preview" id="preview1">
+                            <div class="image-display-container">
+                                <img src="" alt="First SAR image preview" class="image-display" id="imageDisplay1">
+                            </div>
+                            <div class="image-info">
+                                <div class="image-meta">
+                                    <span class="image-name" id="imageName1"></span>
+                                    <span class="image-size" id="imageSize1"></span>
+                                </div>
+                                <button class="remove-image-btn" id="removeImage1" data-tooltip="Remove this image">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div id="dropzone2" class="dropzone" data-tooltip="Drop your second SAR image here">
+                        <div class="dropzone-content">
+                            <i class="fas fa-cloud-upload-alt dropzone-icon"></i>
+                            <h3>Second SAR Image</h3>
+                            <p>Drag & drop your image here or click to browse</p>
+                            <p class="file-format-hint">Supports PNG, JPG, TIFF (max 10MB)</p>
+                            <input type="file" id="file2" accept="image/*" hidden>
+                        </div>
+                        <div class="image-preview" id="preview2">
+                            <div class="image-display-container">
+                                <img src="" alt="Second SAR image preview" class="image-display" id="imageDisplay2">
+                            </div>
+                            <div class="image-info">
+                                <div class="image-meta">
+                                    <span class="image-name" id="imageName2"></span>
+                                    <span class="image-size" id="imageSize2"></span>
+                                </div>
+                                <button class="remove-image-btn" id="removeImage2" data-tooltip="Remove this image">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="compare-section">
+                <button id="compareBtn" class="btn btn-primary" disabled data-tooltip="Process both images to detect changes">
+                    <i class="fas fa-search"></i> Detect Changes
+                </button>
+            </div>
+        </section>
+
+        <div class="loading" id="loadingSpinner">
+            <div class="spinner"></div>
+            <p class="loading-text">Processing images, please wait...</p>
+        </div>
+
+        <section class="section" id="results-section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-bar section-header-icon"></i> Change Detection Results</h2>
+            </div>
+            <div class="results-container">
+                <div class="result-image-container">
+                    <img src="" alt="Change detection result" id="resultImage" class="result-image">
+                </div>
+                <div class="result-details">
+                    <div class="prediction-container">
+                        <div class="prediction-badge man-made" id="predictionBadge">
+                            <i class="fas fa-building"></i> Man-made Change
+                        </div>
+                        <div class="confidence-container">
+                            <div class="confidence-label">Confidence:</div>
+                            <div class="confidence-value" id="confidenceValue">98.5%</div>
+                        </div>
+                    </div>
+                    <div class="result-explanation">
+                        <h3 class="result-explanation-title">What was detected?</h3>
+                        <p class="result-explanation-text" id="explanationText">
+                            The model has identified significant man-made changes between the two SAR images. 
+                            The highlighted areas indicate new structures or modifications to existing ones, 
+                            which are characteristic of human activity rather than natural changes.
+                        </p>
+                        <div class="result-legend">
+                            <div class="legend-item">
+                                <div class="legend-color red"></div>
+                                <span class="legend-text">High change intensity</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color yellow"></div>
+                                <span class="legend-text">Medium change intensity</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color blue"></div>
+                                <span class="legend-text">Original features</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button id="downloadResultBtn" class="btn btn-secondary" data-tooltip="Save the result image to your device">
+                            <i class="fas fa-download"></i> Download Result
+                        </button>
+                        <button id="newAnalysisBtn" class="btn btn-outline" data-tooltip="Start a new analysis with different images">
+                            <i class="fas fa-redo"></i> New Analysis
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section info-section">
+            <div class="section-header">
+                <h2><i class="fas fa-info-circle section-header-icon"></i> About SAR Change Detection</h2>
+            </div>
+            <p>
+                Synthetic Aperture Radar (SAR) imagery provides valuable insights into Earth's surface changes, 
+                regardless of weather conditions or time of day. This tool uses advanced deep learning techniques to 
+                detect and classify man-made versus natural changes in SAR image pairs.
+            </p>
+            <div class="info-grid">
+                <div class="info-card">
+                    <i class="fas fa-cogs info-icon"></i>
+                    <h3 class="info-title">How It Works</h3>
+                    <p>
+                        Our system employs a Convolutional Neural Network (CNN) combined with a Random Forest classifier 
+                        to analyze the difference between two SAR images and identify significant changes. The model has 
+                        been trained on a diverse dataset of SAR imagery containing both man-made and natural changes.
+                    </p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-chart-line info-icon"></i>
+                    <h3 class="info-title">Applications</h3>
+                    <p>
+                        Change detection in SAR imagery has numerous applications including urban development monitoring, 
+                        disaster assessment, environmental studies, agricultural analysis, and security surveillance. 
+                        The ability to distinguish between man-made and natural changes is crucial for many of these applications.
+                    </p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-laptop-code info-icon"></i>
+                    <h3 class="info-title">Technology</h3>
+                    <p>
+                        This tool is built using PyTorch for the deep learning model, with a user-friendly web interface 
+                        for easy interaction. The backend processing ensures efficient and accurate analysis of SAR imagery, 
+                        while maintaining high performance even with large image files.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>SAR Change Detection</h3>
+                    <p>
+                        A powerful tool for detecting man-made changes in Synthetic Aperture Radar (SAR) satellite imagery.
+                    </p>
+                    <div class="tool-features">
+                        <div class="tool-feature">
+                            <i class="fas fa-check-circle feature-icon"></i>
+                            <span>High accuracy change detection</span>
+                        </div>
+                        <div class="tool-feature">
+                            <i class="fas fa-check-circle feature-icon"></i>
+                            <span>Man-made vs. natural change classification</span>
+                        </div>
+                        <div class="tool-feature">
+                            <i class="fas fa-check-circle feature-icon"></i>
+                            <span>Easy-to-use interface</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-book"></i> Documentation</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> FAQs</a></li>
+                        <li><a href="#"><i class="fas fa-file-alt"></i> Research Paper</a></li>
+                        <li><a href="#"><i class="fas fa-code"></i> Source Code</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Technology</h3>
+                    <p>Built with cutting-edge tools and frameworks:</p>
+                    <div class="tech-badges">
+                        <span class="tech-badge"><i class="fab fa-python"></i> Python</span>
+                        <span class="tech-badge"><i class="fas fa-brain"></i> PyTorch</span>
+                        <span class="tech-badge"><i class="fas fa-satellite"></i> GDAL</span>
+                        <span class="tech-badge"><i class="fab fa-js"></i> JavaScript</span>
+                        <span class="tech-badge"><i class="fab fa-html5"></i> HTML5</span>
+                        <span class="tech-badge"><i class="fab fa-css3-alt"></i> CSS3</span>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 SAR Change Detection. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <div class="alert" id="errorAlert">
+        <div class="alert-content">
+            <i class="fas fa-exclamation-circle alert-icon"></i>
+            <div class="alert-body">
+                <h3>Error</h3>
+                <p id="errorMessage"></p>
+            </div>
+            <button class="alert-close" id="closeAlert">&times;</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html> 
